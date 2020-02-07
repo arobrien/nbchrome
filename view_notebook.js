@@ -112,25 +112,45 @@ function render_code_cell(cell) {
         output_area.appendChild(output_prompt);
       }
       
-      if ('text/html' in cell.outputs[a].data) { 
-        var output_html = document.createElement('div');
-        output_html.setAttribute('class', 'output_html rendered_html output_subarea output_execute_result');
-        output_html.innerHTML = cell.outputs[a].data['text/html'].join('');
-        output_area.appendChild(output_html);
+      if (cell.outputs[a].output_type == 'execute_result') {
+        if ('text/html' in cell.outputs[a].data) { 
+          var output_html = document.createElement('div');
+          output_html.setAttribute('class', 'output_html rendered_html output_subarea output_execute_result');
+          output_html.innerHTML = cell.outputs[a].data['text/html'].join('');
+          output_area.appendChild(output_html);
+        }
+        else if ('text/plain' in cell.outputs[a].data) {
+          var output_text = document.createElement('div');
+          output_text.setAttribute('class', 'output_text output_subarea output_execute_result');
+          var pre = document.createElement('pre');
+          pre.innerText = cell.outputs[a].data['text/plain'].join('');
+          output_text.appendChild(pre);
+          output_area.appendChild(output_text);
+        }
       }
-      else if ('image/png' in cell.outputs[a].data) {
-        var output_png = document.createElement('div');
-        output_png.setAttribute('class', 'output_png output_subarea');
-        var img = document.createElement('img');
-        img.setAttribute('src', 'data:image/png;base64,' + cell.outputs[a].data['image/png']);
-        output_png.appendChild(img);
-        output_area.appendChild(output_png);
+      else if (cell.outputs[a].output_type == 'display_data') {
+        if ('image/png' in cell.outputs[a].data) {
+          var output_png = document.createElement('div');
+          output_png.setAttribute('class', 'output_png output_subarea');
+          var img = document.createElement('img');
+          img.setAttribute('src', 'data:image/png;base64,' + cell.outputs[a].data['image/png']);
+          output_png.appendChild(img);
+          output_area.appendChild(output_png);
+        }
+        else if ('text/plain' in cell.outputs[a].data) {
+          var output_text = document.createElement('div');
+          output_text.setAttribute('class', 'output_text output_subarea output_execute_result');
+          var pre = document.createElement('pre');
+          pre.innerText = cell.outputs[a].data['text/plain'].join('');
+          output_text.appendChild(pre);
+          output_area.appendChild(output_text);
+        }
       }
-      else if ('text/plain' in cell.outputs[a].data) {
+      else if (cell.outputs[a].output_type == 'stream') {
         var output_text = document.createElement('div');
-        output_text.setAttribute('class', 'output_text output_subarea output_execute_result');
+        output_text.setAttribute('class', 'output_subarea output_stream output_stdout output_text');
         var pre = document.createElement('pre');
-        pre.innerText = cell.outputs[a].data['text/plain'].join('');
+        pre.innerText = cell.outputs[a].text.join('');
         output_text.appendChild(pre);
         output_area.appendChild(output_text);
       }
