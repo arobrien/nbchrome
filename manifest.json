@@ -8,7 +8,7 @@
     {
       "matches": ["file://*/*.ipynb"],
       "run_at": "document_end",
-      "js": ["styles.js","view_notebook.js"]
+      "js": ["showdown.min.js","styles.js","view_notebook.js"]
     }
   ],
   "web_accessible_resources": [

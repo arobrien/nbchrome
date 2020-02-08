@@ -175,7 +175,10 @@ function render_markdown_cell(cell) {
   var text_div = document.createElement('div');
   text_div.setAttribute('class', 'text_cell_render border-box-sizing rendered_html');
   
-  text_div.innerHTML = cell.source.join('');
+  var markdown_source = cell.source.join('');
+  var converter = new showdown.Converter();
+  var markdown_html = converter.makeHtml(markdown_source);
+  text_div.innerHTML = markdown_html
   
   inner_cell.appendChild(text_div);
   
