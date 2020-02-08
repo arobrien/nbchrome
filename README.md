@@ -15,3 +15,7 @@ Installation:
 2. Go to chrome://extensions/ and enable developer mode in the top-right corner.
 3. Click 'Load unpacked' from the top-left corner and select the extension.
 4. Open any .ipynb file in Chrome.
+
+At the moment, if you hit an error it's probably because of some element that the script isn't handling.
+If this happens it will probably just show you the raw json and look like nothing else happened.
+If this happens to you please take the time to post the error and a sample notebook that triggers it.
