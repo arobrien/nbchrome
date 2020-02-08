@@ -8,8 +8,7 @@ I would appreciate pull requests or git issues.**
 
 - The plugin will intercept any *.ipynb file read using the file:// protocol - ie. it will not
   be activated for notebooks served via a Jupyter server process.
-- The plugin will not check notebook versions, or perform syntax highlighting,
-and only supports text/html, image/png and text/plain output types.
+- The plugin will not check notebook versions, and only supports text/html, image/png and text/plain output types.
 
 Installation:
 1. Download to a local folder.
