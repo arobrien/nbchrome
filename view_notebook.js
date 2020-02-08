@@ -28,6 +28,11 @@ node.setAttribute('type', 'text/css');
 node.innerHTML = style3
 document.head.appendChild(node);
 
+var node = document.createElement('style');
+node.setAttribute('type', 'text/css');
+node.innerHTML = highlighter_style
+document.head.appendChild(node);
+
 var node = document.createElement('script');
 node.setAttribute('src', "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS_HTML");
 document.head.appendChild(node);
@@ -36,6 +41,7 @@ var node = document.createElement('script');
 node.setAttribute('type', "text/x-mathjax-config");
 node.setAttribute('src', chrome.runtime.getURL('mathjax_config.js'));
 document.head.appendChild(node);
+
 
 // modify content
 
@@ -72,19 +78,16 @@ function render_code_cell(cell) {
   input_area.setAttribute('class', 'input_area');
   inner_cell.appendChild(input_area);
   
-  var highlight = document.createElement('div');
-  highlight.setAttribute('class', 'highlight hl-ipython3');
-  input_area.appendChild(highlight);
-  
+  var code_div = document.createElement('div');
+  code_div.setAttribute('class', 'highlight');
   var pre = document.createElement('pre');
-  pre.innerText = cell.source.join('');
-  // for (var i=0; i < cell.source.length; i++) {
-    // var s = document.createElement('span');
-    // s.innerText = cell.source[i];
-    // pre.appendChild(s);
-  // }
-  
-  highlight.appendChild(pre);
+  var code = document.createElement('code');
+  code.setAttribute('class', 'python');
+  code.innerText = cell.source.join('');
+  hljs.highlightBlock(code);
+  pre.appendChild(code)
+  code_div.appendChild(pre)
+  input_area.appendChild(code_div)
   
   if (cell.outputs.length > 0) {
     var output_wrapper = document.createElement('div');
