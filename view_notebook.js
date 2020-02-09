@@ -32,7 +32,38 @@ function render_cell(cell) {
   }
 }
 
-function make_input_div(cell) {
+
+function render_code_cell(cell) {
+  var div = make_node('div', {class: 'cell border-box-sizing code_cell rendered'});
+  
+  div.appendChild(make_code_input_div(cell));
+  
+  if (cell.outputs.length > 0) {
+    div.appendChild(make_code_output_div(cell));
+  }
+  
+  return div;
+}
+
+function render_markdown_cell(cell) {
+  var converter = new showdown.Converter();
+  var markdown_html = converter.makeHtml(cell.source.join(''));
+  
+  var div = make_node('div', {class: 'cell border-box-sizing text_cell rendered'});
+  div.appendChild(
+    make_node('div', {class: 'prompt input_prompt'}));
+  div.appendChild(
+    make_node('div', {class: 'inner_cell'})).appendChild(
+    make_node('div', {class: 'text_cell_render border-box-sizing rendered_html'}, undefined, markdown_html));
+  
+  return div;
+}
+
+function render_dummy_cell(cell) {
+  return make_node('div', {}, undefined, 'Cell type ' + cell.cell_type + ' not supported');
+}
+
+function make_code_input_div(cell) {
   var code = make_node('code', {class: 'python'}, cell.source.join(''));
   hljs.highlightBlock(code);
   
@@ -51,7 +82,7 @@ function make_input_div(cell) {
   return input;
 }
 
-function make_output_div(cell) {
+function make_code_output_div(cell) {
   var output_wrapper = make_node('div', {class: 'output_wrapper'});
   
   var output_div = make_node('div', {class: 'output'});
@@ -118,37 +149,6 @@ function make_stream_output(output) {
   output_text.appendChild(make_node('pre', {}, undefined, output.text.join('')));
   return output_text;
 }
-
-function render_code_cell(cell) {
-  var div = make_node('div', {class: 'cell border-box-sizing code_cell rendered'});
-  
-  div.appendChild(make_input_div(cell));
-  
-  if (cell.outputs.length > 0) {
-    div.appendChild(make_output_div(cell));
-  }
-  
-  return div;
-}
-
-function render_markdown_cell(cell) {
-  var converter = new showdown.Converter();
-  var markdown_html = converter.makeHtml(cell.source.join(''));
-  
-  var div = make_node('div', {class: 'cell border-box-sizing text_cell rendered'});
-  div.appendChild(
-    make_node('div', {class: 'prompt input_prompt'}));
-  div.appendChild(
-    make_node('div', {class: 'inner_cell'})).appendChild(
-    make_node('div', {class: 'text_cell_render border-box-sizing rendered_html'}, undefined, markdown_html));
-  
-  return div;
-}
-
-function render_dummy_cell(cell) {
-  return make_node('div', {}, undefined, 'Cell type ' + cell.cell_type + ' not supported');
-}
-
 
 // load in styles
 add_style(style1);
