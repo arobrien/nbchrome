@@ -1,49 +1,24 @@
 'use strict';
 
-console.log("nb_chrome loading");
+console.log("nbchrome loading");
 
+function make_node(tag, attributes, innerText, innerHTML) {
+  var node = document.createElement(tag);
+  for (var a in attributes) {
+    node.setAttribute(a, attributes[a]);
+  }
+  if (innerText) {
+    node.innerText = innerText;
+  }
+  if (innerHTML) {
+    node.innerHTML = innerHTML;
+  }
+  return node;
+}
 
-// load in styles and scripts`
-
-var node = document.createElement('style');
-node.setAttribute('src', "https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js");
-document.head.appendChild(node);
-
-var node = document.createElement('style');
-node.setAttribute('src', "https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js");
-document.head.appendChild(node);
-
-var node = document.createElement('style');
-node.setAttribute('type', 'text/css');
-node.innerHTML = style1
-document.head.appendChild(node);
-
-var node = document.createElement('style');
-node.setAttribute('type', 'text/css');
-node.innerHTML = style2
-document.head.appendChild(node);
-
-var node = document.createElement('style');
-node.setAttribute('type', 'text/css');
-node.innerHTML = style3
-document.head.appendChild(node);
-
-var node = document.createElement('style');
-node.setAttribute('type', 'text/css');
-node.innerHTML = highlighter_style
-document.head.appendChild(node);
-
-var node = document.createElement('script');
-node.setAttribute('src', "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS_HTML");
-document.head.appendChild(node);
-
-var node = document.createElement('script');
-node.setAttribute('type', "text/x-mathjax-config");
-node.setAttribute('src', chrome.runtime.getURL('mathjax_config.js'));
-document.head.appendChild(node);
-
-
-// modify content
+function add_style(style) {
+  document.head.appendChild(make_node('style', {type: 'text/css'}, undefined, style));
+}
 
 function render_cell(cell) {
   if (cell.cell_type == 'code') {
@@ -57,165 +32,142 @@ function render_cell(cell) {
   }
 }
 
-function render_code_cell(cell) {
-  var div = document.createElement('div');
-  div.setAttribute('class', 'cell border-box-sizing code_cell rendered');
-  
-  var input = document.createElement('div');
-  input.setAttribute('class', 'input');
-  div.appendChild(input);
-  
-  var input_prompt = document.createElement('div');
-  input_prompt.setAttribute('class', 'prompt input_prompt');
-  input_prompt.innerHTML = 'In&nbsp;[' + (cell.execution_count || '') + ']:'
-  input.appendChild(input_prompt);
-  
-  var inner_cell = document.createElement('div');
-  inner_cell.setAttribute('class', 'inner_cell');
-  input.appendChild(inner_cell);
-  
-  var input_area = document.createElement('div');
-  input_area.setAttribute('class', 'input_area');
-  inner_cell.appendChild(input_area);
-  
-  var code_div = document.createElement('div');
-  code_div.setAttribute('class', 'highlight');
-  var pre = document.createElement('pre');
-  var code = document.createElement('code');
-  code.setAttribute('class', 'python');
-  code.innerText = cell.source.join('');
+function make_input_div(cell) {
+  var code = make_node('code', {class: 'python'}, cell.source.join(''));
   hljs.highlightBlock(code);
-  pre.appendChild(code)
-  code_div.appendChild(pre)
-  input_area.appendChild(code_div)
+  
+  var input = make_node('div', {class: 'input'});
+
+  input.appendChild(
+    make_node('div', {class: 'prompt input_prompt'}, undefined, 'In&nbsp;[' + (cell.execution_count || '') + ']:'));
+  
+  input.appendChild(
+    make_node('div', {class: 'inner_cell'})).appendChild(
+    make_node('div', {class: 'input_area'})).appendChild(
+    make_node('div', {class: 'highlight'})).appendChild(
+    make_node('pre')).appendChild(
+    code)
+  
+  return input;
+}
+
+function make_output_div(cell) {
+  var output_wrapper = make_node('div', {class: 'output_wrapper'});
+  
+  var output_div = make_node('div', {class: 'output'});
+  output_wrapper.appendChild(output_div)
+  
+  for (var output of cell.outputs) {
+    output_div.appendChild(make_output_area(output));
+  }
+  
+  return output_wrapper;
+}
+
+function make_output_area(output) {
+  var output_area = make_node('div', {class: 'output_area'});
+  
+  if ('execution_count' in output) {
+    output_area.appendChild(make_node('div', {class: 'prompt output_prompt'}, undefined, 'Out[' + output.execution_count + ']:'));
+  }
+  else {
+    output_area.appendChild(make_node('div', {class: 'prompt'}));
+  }
+  
+  if (output.output_type == 'execute_result') {
+    if ('text/html' in output.data) { 
+      output_area.appendChild(make_html_output(output));
+    }
+    else if ('text/plain' in output.data) {
+      output_area.appendChild(make_text_output(output));
+    }
+  }
+  else if (output.output_type == 'display_data') {
+    if ('image/png' in output.data) {
+      output_area.appendChild(make_image_output(output));
+    }
+    else if ('text/plain' in output.data) {
+      output_area.appendChild(make_text_output(output));
+    }
+  }
+  else if (output.output_type == 'stream') {
+    output_area.appendChild(make_stream_output(output));
+  }
+  
+  return output_area;
+}
+
+function make_html_output(output) {
+  return make_node('div', {class: 'output_html rendered_html output_subarea output_execute_result'}, undefined, output.data['text/html'].join(''));
+}
+
+function make_text_output(output) {
+  var output_text = make_node('div', {class: 'output_text output_subarea output_execute_result'});
+  output_text.appendChild(make_node('pre', {}, output.data['text/plain'].join('')));
+  return output_text;
+}
+
+function make_image_output(output) {
+  var output_png = make_node('div', {class: 'output_png output_subarea'});
+  output_png.appendChild(make_node('img', {src: 'data:image/png;base64,' + output.data['image/png']}));
+  return output_png;
+}
+
+function make_stream_output(output) {
+  var output_text = make_node('div', {class: 'output_subarea output_stream output_stdout output_text'});
+  output_text.appendChild(make_node('pre', {}, undefined, output.text.join('')));
+  return output_text;
+}
+
+function render_code_cell(cell) {
+  var div = make_node('div', {class: 'cell border-box-sizing code_cell rendered'});
+  
+  div.appendChild(make_input_div(cell));
   
   if (cell.outputs.length > 0) {
-    var output_wrapper = document.createElement('div');
-    output_wrapper.setAttribute('class', 'output_wrapper');
-    div.appendChild(output_wrapper)
-    
-    var output = document.createElement('div');
-    output.setAttribute('class', 'output');
-    output_wrapper.appendChild(output)
-    
-    for (var a=0; a < cell.outputs.length; a++) {
-      var output_area = document.createElement('div');
-      output_area.setAttribute('class', 'output_area');
-      output.appendChild(output_area)
-      
-      if ('execution_count' in cell.outputs[a]) {
-        var output_prompt = document.createElement('div');
-        output_prompt.setAttribute('class', 'prompt output_prompt');
-        input_prompt.innerHTML = 'Out[' + cell.outputs[a].execution_count + ']:';
-        output_area.appendChild(output_prompt);
-      }
-      else {
-        var output_prompt = document.createElement('div');
-        output_prompt.setAttribute('class', 'prompt');
-        output_area.appendChild(output_prompt);
-      }
-      
-      if (cell.outputs[a].output_type == 'execute_result') {
-        if ('text/html' in cell.outputs[a].data) { 
-          var output_html = document.createElement('div');
-          output_html.setAttribute('class', 'output_html rendered_html output_subarea output_execute_result');
-          output_html.innerHTML = cell.outputs[a].data['text/html'].join('');
-          output_area.appendChild(output_html);
-        }
-        else if ('text/plain' in cell.outputs[a].data) {
-          var output_text = document.createElement('div');
-          output_text.setAttribute('class', 'output_text output_subarea output_execute_result');
-          var pre = document.createElement('pre');
-          pre.innerText = cell.outputs[a].data['text/plain'].join('');
-          output_text.appendChild(pre);
-          output_area.appendChild(output_text);
-        }
-      }
-      else if (cell.outputs[a].output_type == 'display_data') {
-        if ('image/png' in cell.outputs[a].data) {
-          var output_png = document.createElement('div');
-          output_png.setAttribute('class', 'output_png output_subarea');
-          var img = document.createElement('img');
-          img.setAttribute('src', 'data:image/png;base64,' + cell.outputs[a].data['image/png']);
-          output_png.appendChild(img);
-          output_area.appendChild(output_png);
-        }
-        else if ('text/plain' in cell.outputs[a].data) {
-          var output_text = document.createElement('div');
-          output_text.setAttribute('class', 'output_text output_subarea output_execute_result');
-          var pre = document.createElement('pre');
-          pre.innerText = cell.outputs[a].data['text/plain'].join('');
-          output_text.appendChild(pre);
-          output_area.appendChild(output_text);
-        }
-      }
-      else if (cell.outputs[a].output_type == 'stream') {
-        var output_text = document.createElement('div');
-        output_text.setAttribute('class', 'output_subarea output_stream output_stdout output_text');
-        var pre = document.createElement('pre');
-        pre.innerText = cell.outputs[a].text.join('');
-        output_text.appendChild(pre);
-        output_area.appendChild(output_text);
-      }
-    }
+    div.appendChild(make_output_div(cell));
   }
   
   return div;
 }
 
 function render_markdown_cell(cell) {
-  var div = document.createElement('div');
-  div.setAttribute('class', 'cell border-box-sizing text_cell rendered');
-  
-  var input_prompt = document.createElement('div');
-  input_prompt.setAttribute('class', 'prompt input_prompt');
-  div.appendChild(input_prompt);
-  
-  var inner_cell = document.createElement('div');
-  inner_cell.setAttribute('class', 'inner_cell');
-  div.appendChild(inner_cell);
-  
-  var text_div = document.createElement('div');
-  text_div.setAttribute('class', 'text_cell_render border-box-sizing rendered_html');
-  
-  var markdown_source = cell.source.join('');
   var converter = new showdown.Converter();
-  var markdown_html = converter.makeHtml(markdown_source);
-  text_div.innerHTML = markdown_html
+  var markdown_html = converter.makeHtml(cell.source.join(''));
   
-  inner_cell.appendChild(text_div);
+  var div = make_node('div', {class: 'cell border-box-sizing text_cell rendered'});
+  div.appendChild(
+    make_node('div', {class: 'prompt input_prompt'}));
+  div.appendChild(
+    make_node('div', {class: 'inner_cell'})).appendChild(
+    make_node('div', {class: 'text_cell_render border-box-sizing rendered_html'}, undefined, markdown_html));
   
   return div;
 }
 
 function render_dummy_cell(cell) {
-  var div = document.createElement('div');
-  div.innerHTML = 'Cell type ' + cell.cell_type + ' not supported';
-  return div;
+  return make_node('div', {}, undefined, 'Cell type ' + cell.cell_type + ' not supported');
 }
 
 
-var maindiv = document.createElement('div');
-maindiv.setAttribute('tabindex', '-1');
-maindiv.setAttribute('id', 'notebook');
-maindiv.setAttribute('class', 'border-box-sizing');
-
-var containerdiv = document.createElement('div');
-containerdiv.setAttribute('id', 'notebook-container');
-containerdiv.setAttribute('class', 'container');
-
+// load in styles
+add_style(style1);
+add_style(style2);
+add_style(style3);
+add_style(highlighter_style);
 
 // get and parse json
 var p = document.body.getElementsByTagName('pre')[0];
 var j = JSON.parse(p.innerText);
 
-for (var i=0; i < j.cells.length; i++) {
-  containerdiv.appendChild(render_cell(j.cells[i]));
+// build new dom
+var containerdiv = make_node('div', {id: 'notebook-container', class: 'container'});
+for (var cell of j.cells) {
+  containerdiv.appendChild(render_cell(cell));
 }
 
-maindiv.appendChild(containerdiv);
-
+// replace old dom with new dom
 document.body.removeChild(p);
-document.body.appendChild(maindiv);
+document.body.appendChild(make_node('div', {tabindex: '-1', id: 'notebook', class: 'border-box-sizing'}).appendChild(containerdiv));
 
-console.log("nb_chrome loaded");
+console.log("nbchrome loaded");
