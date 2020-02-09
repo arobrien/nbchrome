@@ -2,8 +2,7 @@
 A lightweight viewer for Jupyter Notebooks as a Chrome Extension.
 This project differentiates from Jupyter Notebook Viewer by not requiring any server process.
 
-**Note: This is currently at the proof of concept stage.
-In particular, functionality is missing and potential copyright issues may have not been addressed.
+**Note: This project is currently at the proof-of-concept phase and some functionality may be missing.
 I would appreciate pull requests or git issues.**
 
 - The plugin will intercept any *.ipynb file read using the file:// protocol - ie. it will not
@@ -12,7 +11,7 @@ I would appreciate pull requests or git issues.**
 
 Installation:
 1. Download to a local folder.
-2. Go to chrome://extensions/ and enable developer mode in the top-right corner.
+2. Go to chrome://extensions and enable developer mode in the top-right corner.
 3. Click 'Load unpacked' from the top-left corner and select the extension.
 4. Open any .ipynb file in Chrome.
 5. If you edit or update the extension, hit the reload button for the extension in the extension manager.
