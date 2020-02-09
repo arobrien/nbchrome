@@ -3,16 +3,38 @@
   "version": "0.1",
   "description": "A lightweight viewer for Jupyter Notebooks",
   "author": "Andrew O'Brien",
-  "permissions": ["tabs", "declarativeContent"],
+  "permissions": ["declarativeContent"],
   "content_scripts": [
     {
       "matches": ["file://*/*.ipynb"],
       "run_at": "document_end",
-      "js": ["showdown.min.js","highlight.min.js","styles.js","view_notebook.js"]
+      "js": ["showdown.min.js","highlight.min.js","mathjax_config.js","tex-chtml.js","styles.js","view_notebook.js"]
     }
   ],
   "web_accessible_resources": [
-    "mathjax_config.html"
+    "mathjax_fonts/woff-v2/MathJax_AMS-Regular.woff",
+    "mathjax_fonts/woff-v2/MathJax_Calligraphic-Bold.woff",
+    "mathjax_fonts/woff-v2/MathJax_Calligraphic-Regular.woff",
+    "mathjax_fonts/woff-v2/MathJax_Fraktur-Bold.woff",
+    "mathjax_fonts/woff-v2/MathJax_Fraktur-Regular.woff",
+    "mathjax_fonts/woff-v2/MathJax_Main-Bold.woff",
+    "mathjax_fonts/woff-v2/MathJax_Main-Italic.woff",
+    "mathjax_fonts/woff-v2/MathJax_Main-Regular.woff",
+    "mathjax_fonts/woff-v2/MathJax_Math-BoldItalic.woff",
+    "mathjax_fonts/woff-v2/MathJax_Math-Italic.woff",
+    "mathjax_fonts/woff-v2/MathJax_Math-Regular.woff",
+    "mathjax_fonts/woff-v2/MathJax_SansSerif-Bold.woff",
+    "mathjax_fonts/woff-v2/MathJax_SansSerif-Italic.woff",
+    "mathjax_fonts/woff-v2/MathJax_SansSerif-Regular.woff",
+    "mathjax_fonts/woff-v2/MathJax_Script-Regular.woff",
+    "mathjax_fonts/woff-v2/MathJax_Size1-Regular.woff",
+    "mathjax_fonts/woff-v2/MathJax_Size2-Regular.woff",
+    "mathjax_fonts/woff-v2/MathJax_Size3-Regular.woff",
+    "mathjax_fonts/woff-v2/MathJax_Size4-Regular.woff",
+    "mathjax_fonts/woff-v2/MathJax_Typewriter-Regular.woff",
+    "mathjax_fonts/woff-v2/MathJax_Vector-Bold.woff",
+    "mathjax_fonts/woff-v2/MathJax_Vector-Regular.woff",
+    "mathjax_fonts/woff-v2/MathJax_Zero.woff"
   ],
   "manifest_version": 2
 }

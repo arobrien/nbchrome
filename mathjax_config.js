@@ -1,5 +1,5 @@
-MathJax.Hub.Config({
-    tex2jax: {
+MathJax = {
+    tex: {
         inlineMath: [ ['$','$'], ["\\(","\\)"] ],
         displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
         processEscapes: true,
@@ -7,9 +7,8 @@ MathJax.Hub.Config({
     },
     // Center justify equations in code and markdown cells. Elsewhere
     // we use CSS to left justify single line equations in code cells.
-    displayAlign: 'center',
-    "HTML-CSS": {
-        styles: {'.MathJax_Display': {"margin": 0}},
-        linebreaks: { automatic: true }
+    chtml: {
+        displayAlign: 'center',
+        fontURL: chrome.runtime.getURL('mathjax_fonts/woff-v2')
     }
-});
+};

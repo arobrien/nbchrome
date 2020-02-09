@@ -170,4 +170,7 @@ for (var cell of j.cells) {
 document.body.removeChild(p);
 document.body.appendChild(make_node('div', {tabindex: '-1', id: 'notebook', class: 'border-box-sizing'}).appendChild(containerdiv));
 
+// format any math present
+MathJax.typesetPromise()
+
 console.log("nbchrome loaded");
