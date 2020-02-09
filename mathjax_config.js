@@ -9,6 +9,6 @@ MathJax = {
     // we use CSS to left justify single line equations in code cells.
     chtml: {
         displayAlign: 'center',
-        fontURL: chrome.runtime.getURL('mathjax_fonts/woff-v2')
+        fontURL: chrome.runtime.getURL('mathjax/woff-v2')
     }
 };

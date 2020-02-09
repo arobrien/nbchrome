@@ -1,3 +1,4 @@
+/*! view_notebook.js | BSD3 License | Copyright Andrew O'Brien */
 'use strict';
 
 console.log("nbchrome loading");
