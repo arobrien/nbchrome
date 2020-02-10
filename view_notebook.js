@@ -17,9 +17,6 @@ function make_node(tag, attributes, innerText, innerHTML) {
   return node;
 }
 
-function add_style(style) {
-  document.head.appendChild(make_node('style', {type: 'text/css'}, undefined, style));
-}
 
 function render_cell(cell) {
   if (cell.cell_type == 'code') {
@@ -150,12 +147,6 @@ function make_stream_output(output) {
   output_text.appendChild(make_node('pre', {}, undefined, output.text.join('')));
   return output_text;
 }
-
-// load in styles
-add_style(style1);
-add_style(style2);
-add_style(style3);
-add_style(highlighter_style);
 
 // get and parse json
 var p = document.body.getElementsByTagName('pre')[0];

@@ -8,12 +8,15 @@
     {
       "matches": ["file://*/*.ipynb"],
       "run_at": "document_end",
+      "css": [
+        "styles.css",
+        "highlight/default.min.css"
+      ],
       "js": [
         "showdown/showdown.min.js",
         "highlight/highlight.min.js",
         "mathjax_config.js",
         "mathjax/tex-chtml.js",
-        "styles.js",
         "view_notebook.js"
       ]
     }
