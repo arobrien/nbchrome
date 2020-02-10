@@ -3,13 +3,10 @@
 
 console.log("nbchrome loading");
 
-function make_node(tag, attributes, innerText, innerHTML) {
+function make_node(tag, attributes, innerHTML) {
   var node = document.createElement(tag);
   for (var a in attributes) {
     node.setAttribute(a, attributes[a]);
-  }
-  if (innerText) {
-    node.innerText = innerText;
   }
   if (innerHTML) {
     node.innerHTML = innerHTML;
@@ -52,13 +49,13 @@ function render_markdown_cell(cell) {
     make_node('div', {class: 'prompt input_prompt'}));
   div.appendChild(
     make_node('div', {class: 'inner_cell'})).appendChild(
-    make_node('div', {class: 'text_cell_render border-box-sizing rendered_html'}, undefined, markdown_html));
+    make_node('div', {class: 'text_cell_render border-box-sizing rendered_html'}, markdown_html));
   
   return div;
 }
 
 function render_dummy_cell(cell) {
-  return make_node('div', {}, undefined, 'Cell type ' + cell.cell_type + ' not supported');
+  return make_node('div', {}, 'Cell type ' + cell.cell_type + ' not supported');
 }
 
 function make_code_input_div(cell) {
@@ -68,7 +65,7 @@ function make_code_input_div(cell) {
   var input = make_node('div', {class: 'input'});
 
   input.appendChild(
-    make_node('div', {class: 'prompt input_prompt'}, undefined, 'In&nbsp;[' + (cell.execution_count || '') + ']:'));
+    make_node('div', {class: 'prompt input_prompt'}, 'In&nbsp;[' + (cell.execution_count || '') + ']:'));
   
   input.appendChild(
     make_node('div', {class: 'inner_cell'})).appendChild(
@@ -97,7 +94,7 @@ function make_output_area(output) {
   var output_area = make_node('div', {class: 'output_area'});
   
   if ('execution_count' in output) {
-    output_area.appendChild(make_node('div', {class: 'prompt output_prompt'}, undefined, 'Out[' + output.execution_count + ']:'));
+    output_area.appendChild(make_node('div', {class: 'prompt output_prompt'}, 'Out[' + output.execution_count + ']:'));
   }
   else {
     output_area.appendChild(make_node('div', {class: 'prompt'}));
@@ -127,7 +124,7 @@ function make_output_area(output) {
 }
 
 function make_html_output(output) {
-  return make_node('div', {class: 'output_html rendered_html output_subarea output_execute_result'}, undefined, output.data['text/html'].join(''));
+  return make_node('div', {class: 'output_html rendered_html output_subarea output_execute_result'}, output.data['text/html'].join(''));
 }
 
 function make_text_output(output) {
@@ -144,7 +141,7 @@ function make_image_output(output) {
 
 function make_stream_output(output) {
   var output_text = make_node('div', {class: 'output_subarea output_stream output_stdout output_text'});
-  output_text.appendChild(make_node('pre', {}, undefined, output.text.join('')));
+  output_text.appendChild(make_node('pre', {}, output.text.join('')));
   return output_text;
 }
 
