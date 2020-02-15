@@ -1,4 +1,15 @@
 describe("Filters", function() {
+  beforeAll(function () {
+    if (
+      typeof module !== 'undefined' &&
+      module.exports &&
+      typeof exports !== 'undefined'
+    ) {
+      ansi = require('../filters/ansi.js');
+    }
+  });
+
+  
   describe("ansi2html", function() {
     // test colors verified with results from nbconvert/filters/ansi.py
     describe("_get_extended_color", function() {
@@ -22,6 +33,18 @@ describe("Filters", function() {
         expect(ansi._get_extended_color([38,5,232], 0)).toEqual([[8,8,8],       2]);
         expect(ansi._get_extended_color([38,5,240], 0)).toEqual([[88,88,88],    2]);
         expect(ansi._get_extended_color([38,5,255], 0)).toEqual([[238,238,238], 2]);
+      });
+    });
+    // test colors verified with results from nbconvert/filters/ansi.py
+    describe("_make_ansi_tags", function() {
+      it("no tags", function() {
+        expect(ansi._make_ansi_tags(undefined, undefined, false, false, false)).toEqual(['','']);
+      });
+      it("bold", function() {
+        expect(ansi._make_ansi_tags(undefined, undefined, true, false, false)).toEqual(['<span class="ansi-bold">','</span>']);
+      });
+      it("underline", function() {
+        expect(ansi._make_ansi_tags(undefined, undefined, false, true, false)).toEqual(['<span class="ansi-underline">','</span>']);
       });
     });
   });
