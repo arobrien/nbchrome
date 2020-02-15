@@ -179,7 +179,7 @@ function _get_extended_color(numbers, i) {
 
 function _make_ansi_tags(fg, bg, bold, underline, inverse) {
   var fg, bg, bold, underline, inverse;
-  if ([fg, bg, bold, underline, inverse] == [undefined, undefined, false, false, false]) return ['', ''];
+  if (fg == undefined && bg == undefined && !bold && !underline && !inverse) return ['', ''];
   
   var classes = [];
   var styles = [];
