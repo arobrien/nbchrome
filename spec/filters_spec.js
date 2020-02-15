@@ -46,6 +46,21 @@ describe("Filters", function() {
       it("underline", function() {
         expect(ansi._make_ansi_tags(undefined, undefined, false, true, false)).toEqual(['<span class="ansi-underline">','</span>']);
       });
+      it("inverse", function() {
+        expect(ansi._make_ansi_tags(undefined, undefined, false, false, true)).toEqual(['<span class="ansi-default-inverse-fg ansi-default-inverse-bg">','</span>']);
+      });
+      it("fg int", function() {
+        expect(ansi._make_ansi_tags(4, undefined, false, false, false)).toEqual(['<span class="ansi-blue-fg">','</span>']);
+      });
+      it("fg triple", function() {
+        expect(ansi._make_ansi_tags([1,2,3], undefined, false, false, false)).toEqual(['<span style="color: rgb(1,2,3)">','</span>']);
+      });
+      it("bg int", function() {
+        expect(ansi._make_ansi_tags(undefined, 4, false, false, false)).toEqual(['<span class="ansi-blue-bg">','</span>']);
+      });
+      it("bg triple", function() {
+        expect(ansi._make_ansi_tags(undefined, [1,2,3], false, false, false)).toEqual(['<span style="background-color: rgb(1,2,3)">','</span>']);
+      });
     });
   });
 });

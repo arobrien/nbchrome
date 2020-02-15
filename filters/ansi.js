@@ -186,12 +186,12 @@ function _make_ansi_tags(fg, bg, bold, underline, inverse) {
   
   if (inverse)[fg, bg] = [bg, fg];
   
-  if (fg instanceof Number) classes.push(_ANSI_COLORS[fg] + '-fg');
+  if (Number.isInteger(fg)) classes.push(_ANSI_COLORS[fg] + '-fg');
   else if (fg instanceof Array) styles.push('color: rgb('+fg[0]+','+fg[1]+','+fg[2]+')');
   else if (inverse) classes.push('ansi-default-inverse-fg');
   
-  if (bg instanceof Number) classes.push(_ANSI_COLORS[bg] + '-bg');
-  else if (bg instanceof Array) styles.push('color: rgb('+bg[0]+','+bg[1]+','+bg[2]+')');
+  if (Number.isInteger(bg)) classes.push(_ANSI_COLORS[bg] + '-bg');
+  else if (bg instanceof Array) styles.push('background-color: rgb('+bg[0]+','+bg[1]+','+bg[2]+')');
   else if (inverse) classes.push('ansi-default-inverse-bg');
   
   if (bold) classes.push('ansi-bold');
