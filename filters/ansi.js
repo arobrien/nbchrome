@@ -231,13 +231,13 @@ if (
   module.exports = {
     ansi2html: ansi2html,
     _get_extended_color: _get_extended_color,
-    _make_ansi_tags
+    _make_ansi_tags: _make_ansi_tags
   };
 }
 else {
   ansi = {
     ansi2html: ansi2html,
     _get_extended_color: _get_extended_color,
-    _make_ansi_tags
+    _make_ansi_tags: _make_ansi_tags
   };
 }

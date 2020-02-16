@@ -1,16 +1,15 @@
 describe("Filters", function() {
-  beforeAll(function () {
-    if (
-      typeof module !== 'undefined' &&
-      module.exports &&
-      typeof exports !== 'undefined'
-    ) {
-      ansi = require('../filters/ansi.js');
-    }
-  });
-
-  
   describe("ansi2html", function() {
+    beforeAll(function () {
+      if (
+        typeof module !== 'undefined' &&
+        module.exports &&
+        typeof exports !== 'undefined'
+      ) {
+        ansi = require('../filters/ansi.js');
+      }
+    });
+    
     // test colors verified with results from nbconvert/filters/ansi.py
     describe("_get_extended_color", function() {
       it("24bit rgb", function() {
@@ -91,5 +90,30 @@ describe("Filters", function() {
         expect(ansi.ansi2html('\x1b[44mhe\x1b[7mll\x1b[27mo')).toEqual('<span class="ansi-blue-bg">he</span><span class="ansi-blue-fg ansi-default-inverse-bg">ll</span><span class="ansi-blue-bg">o</span>');
       });
     });
+  });
+  
+  describe("data_type_filter", function() {
+    beforeAll(function () {
+      if (
+        typeof module !== 'undefined' &&
+        module.exports &&
+        typeof exports !== 'undefined'
+      ) {
+        data_type_filter = require('../filters/data_type_filter.js');
+      }
+    });
+    
+    describe("filter_data_type", function() {
+      it("24bit rgb", function() {
+        expect(data_type_filter.filter_data_type({"hair":"1", "water":2, "image/png":3, "rock":4.0})).toEqual(['image/png']);
+        expect(data_type_filter.filter_data_type({"application/pdf":"file_path", "hair":2, "water":"yay", "png":'not a png', "rock":'is a rock'})).toEqual(['application/pdf']);
+        expect(data_type_filter.filter_data_type({"hair":"this is not", "water":"going to return anything", "rock":"or is it"})).toEqual([undefined]);
+      });
+    });
+      
+      
+        // assert "image/png" in filter({"hair":"1", "water":2, "image/png":3, "rock":4.0})
+        // assert "application/pdf" in filter({"application/pdf":"file_path", "hair":2, "water":"yay", "png":'not a png', "rock":'is a rock'})
+        // self.assertEqual(filter({"hair":"this is not", "water":"going to return anything", "rock":"or is it"}), [])
   });
 });
