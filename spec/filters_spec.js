@@ -92,28 +92,92 @@ describe("Filters", function() {
     });
   });
   
-  describe("data_type_filter", function() {
+  describe("simple_filters", function() {
     beforeAll(function () {
       if (
         typeof module !== 'undefined' &&
         module.exports &&
         typeof exports !== 'undefined'
       ) {
-        data_type_filter = require('../filters/data_type_filter.js');
+        simple_filters = require('../filters/simple_filters.js');
       }
     });
     
     describe("filter_data_type", function() {
-      it("24bit rgb", function() {
-        expect(data_type_filter.filter_data_type({"hair":"1", "water":2, "image/png":3, "rock":4.0})).toEqual(['image/png']);
-        expect(data_type_filter.filter_data_type({"application/pdf":"file_path", "hair":2, "water":"yay", "png":'not a png', "rock":'is a rock'})).toEqual(['application/pdf']);
-        expect(data_type_filter.filter_data_type({"hair":"this is not", "water":"going to return anything", "rock":"or is it"})).toEqual([undefined]);
+      it("all", function() {
+        expect(simple_filters.filter_data_type({"hair":"1", "water":2, "image/png":3, "rock":4.0})).toEqual(['image/png']);
+        expect(simple_filters.filter_data_type({"application/pdf":"file_path", "hair":2, "water":"yay", "png":'not a png', "rock":'is a rock'})).toEqual(['application/pdf']);
+        expect(simple_filters.filter_data_type({"hair":"this is not", "water":"going to return anything", "rock":"or is it"})).toEqual([undefined]);
       });
     });
-      
-      
-        // assert "image/png" in filter({"hair":"1", "water":2, "image/png":3, "rock":4.0})
-        // assert "application/pdf" in filter({"application/pdf":"file_path", "hair":2, "water":"yay", "png":'not a png', "rock":'is a rock'})
-        // self.assertEqual(filter({"hair":"this is not", "water":"going to return anything", "rock":"or is it"}), [])
+    
+    describe("get_metadata", function() {
+      it("all", function() {
+        var obj = {
+        'metadata': {
+            'width': 1,
+            'height': 2,
+            'image/png': {
+                'unconfined': true,
+                'height': 3,
+            }
+          }
+        }
+        
+        expect(simple_filters.get_metadata(obj, 'nowhere')).toEqual(undefined);
+        expect(simple_filters.get_metadata(obj, 'height')).toEqual(2);
+        expect(simple_filters.get_metadata(obj, 'unconfined')).toEqual(undefined);
+        expect(simple_filters.get_metadata(obj, 'unconfined', 'image/png')).toEqual(true);
+        expect(simple_filters.get_metadata(obj, 'width', 'image/png')).toEqual(1);
+        expect(simple_filters.get_metadata(obj, 'height', 'image/png')).toEqual(3);
+      });
+    });
+    
+    // describe("highlight_code", function() {
+      // it("all", function() {
+        // expect(simple_filters.highlight_code()).toEqual();
+      // });
+    // });
+    
+    
+    describe("json_dumps", function() {
+      it("all", function() {
+        expect(simple_filters.json_dumps()).toEqual();
+      });
+    });
+    
+    // describe("markdown2html", function() {
+      // it("all", function() {
+        // expect(simple_filters.markdown2html()).toEqual();
+      // });
+    // });
+    
+    describe("posix_path", function() {
+      it("all", function() {
+        expect(simple_filters.posix_path('path/with/forward\\and\\back')).toEqual('path/with/forward/and/back');
+      });
+    });
+    
+    describe("strip_files_prefix", function() {
+      it("all", function() {
+        expect(simple_filters.strip_files_prefix('')).toEqual('');
+        expect(simple_filters.strip_files_prefix('/files')).toEqual('/files');
+        expect(simple_filters.strip_files_prefix('test="/files"')).toEqual('test="/files"')
+        expect(simple_filters.strip_files_prefix('My files are in `files/`')).toEqual('My files are in `files/`');
+        expect(simple_filters.strip_files_prefix('<a href="files/test.html">files/test.html</a>')).toEqual('<a href="test.html">files/test.html</a>');
+        expect(simple_filters.strip_files_prefix('<a href="/files/test.html">files/test.html</a>')).toEqual('<a href="test.html">files/test.html</a>');
+        expect(simple_filters.strip_files_prefix("<a href='files/test.html'>files/test.html</a>")).toEqual("<a href='test.html'>files/test.html</a>");
+        expect(simple_filters.strip_files_prefix('<img src="files/url/location.gif">')).toEqual('<img src="url/location.gif">');
+        expect(simple_filters.strip_files_prefix('<img src="/files/url/location.gif">')).toEqual('<img src="url/location.gif">');
+        expect(simple_filters.strip_files_prefix('hello![caption]')).toEqual('hello![caption]');
+        expect(simple_filters.strip_files_prefix('hello![caption](/url/location.gif)')).toEqual('hello![caption](/url/location.gif)');
+        expect(simple_filters.strip_files_prefix('hello![caption](url/location.gif)')).toEqual('hello![caption](url/location.gif)');
+        expect(simple_filters.strip_files_prefix('hello![caption](url/location.gif)')).toEqual('hello![caption](url/location.gif)');
+        expect(simple_filters.strip_files_prefix('hello![caption](files/url/location.gif)')).toEqual('hello![caption](url/location.gif)');
+        expect(simple_filters.strip_files_prefix('hello![caption](/files/url/location.gif)')).toEqual('hello![caption](url/location.gif)');
+        expect(simple_filters.strip_files_prefix('hello [text](/files/url/location.gif)')).toEqual('hello [text](url/location.gif)');
+        expect(simple_filters.strip_files_prefix('hello [text space](files/url/location.gif)')).toEqual('hello [text space](url/location.gif)');
+      });
+    });
   });
 });
