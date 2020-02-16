@@ -27,23 +27,31 @@ function ansi2html(value) {
   var cleaned = jinjaToJS.runtime.escape(value);
   
   // state
-  var fg, bg
-  var bold = false
-  var underline = false
-  var inverse = false
+  var fg, bg;
+  var bold = false;
+  var underline = false;
+  var inverse = false;
   
   // number collected in each match
-  var numbers
+  var numbers;
   
   // accumulate output
-  var out = ""
+  var out = "";
   
-  last_index = 0
-  ansi_re = /\x1b\[(.*?)([@-~])/g
+  var last_index = 0;
+  var ansi_re = /\x1b\[(.*?)([@-~])/g;
+  var m;
   while (m = ansi_re.exec(cleaned)) {
     // [match, group1, group2, index: n]
     
-    if (m.index - last_index) {
+    // process state for next chunk
+    if (m[2] == 'm') {
+      numbers = m[1].split(';').map(n => Number(n));
+    } else {
+      numbers = [];
+    }
+    
+    if (m.index > last_index) {
       // process previous chunk based on current state
       var [starttag, endtag] = _make_ansi_tags(bold && fg < 8 ? fg + 8 : fg,
                                                bg, bold, underline, inverse);
@@ -55,8 +63,7 @@ function ansi2html(value) {
     // increment to start of next chunk
     last_index = m.index + m[0].length;
     
-    // process state for next chunk
-    numbers = m[1].split(';').map(n => Number(n));
+    
     for (var i=0; i < numbers.length; i++) {
       var n = numbers[i]
       switch(n) {
@@ -139,6 +146,16 @@ function ansi2html(value) {
       }
     }
   }
+  
+    if (cleaned.length > last_index) {
+      // process last chunk
+      var [starttag, endtag] = _make_ansi_tags(bold && fg < 8 ? fg + 8 : fg,
+                                               bg, bold, underline, inverse);
+      out += starttag;
+      out += cleaned.slice(last_index);
+      out += endtag;
+    }
+  
   return out;
 };
 

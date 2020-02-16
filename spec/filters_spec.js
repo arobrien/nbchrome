@@ -35,7 +35,7 @@ describe("Filters", function() {
         expect(ansi._get_extended_color([38,5,255], 0)).toEqual([[238,238,238], 2]);
       });
     });
-    // test colors verified with results from nbconvert/filters/ansi.py
+    // test results verified with results from nbconvert/filters/ansi.py
     describe("_make_ansi_tags", function() {
       it("no tags", function() {
         expect(ansi._make_ansi_tags(undefined, undefined, false, false, false)).toEqual(['','']);
@@ -60,6 +60,35 @@ describe("Filters", function() {
       });
       it("bg triple", function() {
         expect(ansi._make_ansi_tags(undefined, [1,2,3], false, false, false)).toEqual(['<span style="background-color: rgb(1,2,3)">','</span>']);
+      });
+      it("all options", function() {
+        expect(ansi._make_ansi_tags(8, [1,2,3], true, true, true)).toEqual(['<span class="ansi-black-intense-bg ansi-bold ansi-underline" style="color: rgb(1,2,3)">','</span>']);
+      });
+    });
+    // test cases from nbconvert/filters/tests/test_ansi.py
+    describe("ansi2html", function() {
+      beforeAll(function () {
+        // var escape = function ()
+        jinjaToJS = {
+          runtime: {
+            escape: (t) => t
+          }
+        }
+        // spyOn(jinjaToJS.runtime, 'escape');
+      });
+      
+      it("all", function() {
+        expect(ansi.ansi2html('\x1b[31m')).toEqual('');
+        expect(ansi.ansi2html('hello\x1b[34m')).toEqual('hello');
+        expect(ansi.ansi2html('he\x1b[32m\x1b[36mllo')).toEqual('he<span class="ansi-cyan-fg">llo</span>');
+        expect(ansi.ansi2html('\x1b[1;33mhello')).toEqual('<span class="ansi-yellow-intense-fg ansi-bold">hello</span>');
+        expect(ansi.ansi2html('\x1b[37mh\x1b[0;037me\x1b[;0037ml\x1b[00;37ml\x1b[;;37mo')).toEqual('<span class="ansi-white-fg">h</span><span class="ansi-white-fg">e</span><span class="ansi-white-fg">l</span><span class="ansi-white-fg">l</span><span class="ansi-white-fg">o</span>');
+        expect(ansi.ansi2html('hel\x1b[0;32mlo')).toEqual('hel<span class="ansi-green-fg">lo</span>');
+        expect(ansi.ansi2html('hellø')).toEqual('hellø');
+        expect(ansi.ansi2html('\x1b[1mhello\x1b[33mworld\x1b[0m')).toEqual('<span class="ansi-bold">hello</span><span class="ansi-yellow-intense-fg ansi-bold">world</span>');
+        expect(ansi.ansi2html('he\x1b[4mll\x1b[24mo')).toEqual('he<span class="ansi-underline">ll</span>o');
+        expect(ansi.ansi2html('\x1b[35mhe\x1b[7mll\x1b[27mo')).toEqual('<span class="ansi-magenta-fg">he</span><span class="ansi-default-inverse-fg ansi-magenta-bg">ll</span><span class="ansi-magenta-fg">o</span>');
+        expect(ansi.ansi2html('\x1b[44mhe\x1b[7mll\x1b[27mo')).toEqual('<span class="ansi-blue-bg">he</span><span class="ansi-blue-fg ansi-default-inverse-bg">ll</span><span class="ansi-blue-bg">o</span>');
       });
     });
   });
