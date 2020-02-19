@@ -35,8 +35,8 @@ function get_metadata(output, key, mimetype=undefined) {
   return md[key];
 }
 
-function highlight_code(source, language, metadata=undefined) {
-  return hljs.highlight(language, source, false, false);
+function highlight_code(source) {
+  return hljs.highlight(window.notebook_language, source.join(''), true).value;
 }
 
 function json_dumps(obj) {
@@ -45,7 +45,7 @@ function json_dumps(obj) {
 
 function markdown2html(source) {
   const converter = new showdown.Converter();
-  return converter.makeHtml(source);
+  return converter.makeHtml(source.join(''));
 }
 
 function posix_path(path) {
