@@ -1,3 +1,17 @@
+const showdown = require('showdown');
+const hljs = require('highlight');
+
+module.exports = {
+  filter_data_type: filter_data_type,
+  get_metadata: get_metadata,
+  highlight_code: highlight_code,
+  json_dumps: json_dumps,
+  markdown2html: markdown2html,
+  posix_path: posix_path,
+  strip_files_prefix: strip_files_prefix
+};
+
+
 DISPLAY_DATA_PRIORITY = [
   'text/html',
   'application/pdf',
@@ -59,29 +73,5 @@ function strip_files_prefix(dirty_text) {
                             /(!?)\[(.*?)\]\(\/?files\/(.*?)\)/g, (m,p1,p2,p3) => p1 + '[' + p2 + '](' + p3 + ')');
 }
 
-if (
-    typeof module !== 'undefined' &&
-    module.exports &&
-    typeof exports !== 'undefined'
-  ) {
-  module.exports = {
-    filter_data_type: filter_data_type,
-    get_metadata: get_metadata,
-    highlight_code: highlight_code,
-    json_dumps: json_dumps,
-    markdown2html: markdown2html,
-    posix_path: posix_path,
-    strip_files_prefix: strip_files_prefix
-  };
-}
-else {
-  simple_filters = {
-    filter_data_type: filter_data_type,
-    get_metadata: get_metadata,
-    highlight_code: highlight_code,
-    json_dumps: json_dumps,
-    markdown2html: markdown2html,
-    posix_path: posix_path,
-    strip_files_prefix: strip_files_prefix
-  };
-}
+
+

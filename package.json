@@ -1,0 +1,36 @@
+{
+  "name": "nbchrome",
+  "version": "0.2.0",
+  "description": "A lightweight viewer for Jupyter Notebooks as a Chrome plugin",
+  "main": "view_notebook.js",
+  "dependencies": {
+    "browserify": "^16.5.0",
+    "highlight": "^0.2.4",
+    "mathjax": "^3.0.1",
+    "showdown": "^1.9.1"
+  },
+  "devDependencies": {
+    "jasmine": "^3.5.0"
+  },
+  "scripts": {
+    "view_notebook": "node view_notebook.js",
+    "test": "jasmine",
+    "build": "browserify view_notebook.js > view_notebook_bundle.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arobrien/nbchrome.git"
+  },
+  "keywords": [
+    "chrome",
+    "jupyter",
+    "notebook",
+    "viewer"
+  ],
+  "author": "Andrew O'Brien",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/arobrien/nbchrome/issues"
+  },
+  "homepage": "https://github.com/arobrien/nbchrome#readme"
+}
