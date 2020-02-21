@@ -6,7 +6,6 @@
   "dependencies": {
     "browserify": "^16.5.0",
     "highlightjs": "^9.16.2",
-    "mathjax-full": "^3.0.1",
     "showdown": "^1.9.1"
   },
   "devDependencies": {

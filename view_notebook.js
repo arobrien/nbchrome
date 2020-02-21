@@ -3,10 +3,10 @@
 
 console.log("rendering document using nbchrome");
 
-renderer = require('./notebook_renderer.js/index.js');
+var renderer = require('./notebook_renderer.js');
 
-require('./mathjax_config.js');
-require('mathjax/es5/tex-chtml.js');
+// require('./mathjax_config.js');
+// require('mathjax/es5/tex-chtml.js');
 
 // get and parse json
 var p = document.body.getElementsByTagName('pre')[0];
@@ -21,6 +21,6 @@ document.body.removeChild(p);
 document.body.appendChild(new_dom);
 
 // format any math present
-MathJax.typesetPromise()
+// MathJax.typesetPromise()
 
 console.log("nbchrome render completed");

@@ -1,6 +1,6 @@
 {
   "name": "Notebook Chrome Viewer",
-  "version": "0.1",
+  "version": "0.2.0",
   "description": "A lightweight viewer for Jupyter Notebooks",
   "author": "Andrew O'Brien",
   "permissions": ["declarativeContent"],
@@ -13,11 +13,7 @@
         "highlight/default.min.css"
       ],
       "js": [
-        "showdown/showdown.min.js",
-        "highlight/highlight.min.js",
-        "mathjax_config.js",
-        "mathjax/tex-chtml.js",
-        "view_notebook.js"
+        "view_notebook_bundle.js"
       ]
     }
   ],
