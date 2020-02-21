@@ -1,5 +1,5 @@
 const showdown = require('showdown');
-const hljs = require('highlight');
+const hljs = require('highlightjs');
 
 module.exports = {
   filter_data_type: filter_data_type,

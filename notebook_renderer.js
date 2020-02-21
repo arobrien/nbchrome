@@ -152,10 +152,17 @@ function make_stream_output(output) {
 }
 
 function render_notebook(j) {
+  var j;
+
+  window.notebook_language = j.metadata.kernelspec.language;
+
   var containerdiv = make_node('div', {id: 'notebook-container', class: 'container'});
   for (var cell of j.cells) {
     containerdiv.appendChild(render_cell(cell));
   }
 
-  return make_node('div', {tabindex: '-1', id: 'notebook', class: 'border-box-sizing'}).appendChild(containerdiv)
+  var notebook_div = make_node('div', {tabindex: '-1', id: 'notebook', class: 'border-box-sizing'});
+  notebook_div.appendChild(containerdiv);
+
+  return notebook_div;
 }

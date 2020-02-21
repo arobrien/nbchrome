@@ -5,12 +5,14 @@
   "main": "view_notebook.js",
   "dependencies": {
     "browserify": "^16.5.0",
-    "highlight": "^0.2.4",
-    "mathjax": "^3.0.1",
+    "highlightjs": "^9.16.2",
+    "mathjax-full": "^3.0.1",
     "showdown": "^1.9.1"
   },
   "devDependencies": {
-    "jasmine": "^3.5.0"
+    "jasmine": "^3.5.0",
+    "mock-browser": "^0.92.14",
+    "sinon-chrome": "^3.0.1"
   },
   "scripts": {
     "view_notebook": "node view_notebook.js",
