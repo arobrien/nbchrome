@@ -1,3 +1,17 @@
+const showdown = require('showdown');
+const hljs = require('highlightjs');
+
+module.exports = {
+  filter_data_type: filter_data_type,
+  get_metadata: get_metadata,
+  highlight_code: highlight_code,
+  json_dumps: json_dumps,
+  markdown2html: markdown2html,
+  posix_path: posix_path,
+  strip_files_prefix: strip_files_prefix
+};
+
+
 DISPLAY_DATA_PRIORITY = [
   'text/html',
   'application/pdf',
@@ -35,8 +49,8 @@ function get_metadata(output, key, mimetype=undefined) {
   return md[key];
 }
 
-function highlight_code(source, language, metadata=undefined) {
-  return hljs.highlight(language, source, false, false);
+function highlight_code(source) {
+  return hljs.highlight(window.notebook_language, source.join(''), true).value;
 }
 
 function json_dumps(obj) {
@@ -45,7 +59,7 @@ function json_dumps(obj) {
 
 function markdown2html(source) {
   const converter = new showdown.Converter();
-  return converter.makeHtml(source);
+  return converter.makeHtml(source.join(''));
 }
 
 function posix_path(path) {
@@ -59,29 +73,5 @@ function strip_files_prefix(dirty_text) {
                             /(!?)\[(.*?)\]\(\/?files\/(.*?)\)/g, (m,p1,p2,p3) => p1 + '[' + p2 + '](' + p3 + ')');
 }
 
-if (
-    typeof module !== 'undefined' &&
-    module.exports &&
-    typeof exports !== 'undefined'
-  ) {
-  module.exports = {
-    filter_data_type: filter_data_type,
-    get_metadata: get_metadata,
-    highlight_code: highlight_code,
-    json_dumps: json_dumps,
-    markdown2html: markdown2html,
-    posix_path: posix_path,
-    strip_files_prefix: strip_files_prefix
-  };
-}
-else {
-  simple_filters = {
-    filter_data_type: filter_data_type,
-    get_metadata: get_metadata,
-    highlight_code: highlight_code,
-    json_dumps: json_dumps,
-    markdown2html: markdown2html,
-    posix_path: posix_path,
-    strip_files_prefix: strip_files_prefix
-  };
-}
+
+
