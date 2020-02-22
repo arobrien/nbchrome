@@ -6,7 +6,9 @@
   "dependencies": {
     "browserify": "^16.5.0",
     "highlightjs": "^9.16.2",
-    "showdown": "^1.9.1"
+    "mathjax": "^3.0.1",
+    "showdown": "^1.9.1",
+    "uglifyify": "^5.0.2"
   },
   "devDependencies": {
     "jasmine": "^3.5.0",
@@ -16,7 +18,8 @@
   "scripts": {
     "view_notebook": "node view_notebook.js",
     "test": "jasmine",
-    "build": "browserify view_notebook.js > view_notebook_bundle.js"
+    "build-dev": "browserify view_notebook.js --debug > view_notebook_bundle.js",
+    "build": "browserify view_notebook.js --debug | uglifyjs --in-source-map inline --source-map-inline > build/view_notebook_bundle.js"
   },
   "repository": {
     "type": "git",

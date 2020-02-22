@@ -5,8 +5,8 @@ console.log("rendering document using nbchrome");
 
 var renderer = require('./notebook_renderer.js');
 
-// require('./mathjax_config.js');
-// require('mathjax/es5/tex-chtml.js');
+require('./mathjax_config.js');
+require('mathjax/es5/tex-chtml.js');
 
 // get and parse json
 var p = document.body.getElementsByTagName('pre')[0];
