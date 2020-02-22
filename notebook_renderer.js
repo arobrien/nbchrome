@@ -76,7 +76,7 @@ function make_code_input_div(cell) {
   input.appendChild(
     make_node('div', {class: 'inner_cell'})).appendChild(
     make_node('div', {class: 'input_area'})).appendChild(
-    make_node('div', {class: 'highlight'})).appendChild(
+    make_node('div', {class: 'highlight hljs'})).appendChild(
     make_node('pre')).appendChild(
     code)
   

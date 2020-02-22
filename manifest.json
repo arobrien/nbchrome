@@ -10,7 +10,7 @@
       "run_at": "document_end",
       "css": [
         "styles.css",
-        "highlight/default.min.css"
+        "highlight/docco.css"
       ],
       "js": [
         "view_notebook_bundle.js"
